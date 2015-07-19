@@ -101,6 +101,7 @@
         autoMatch: '@',
         focusOut: '&',
         focusIn: '&',
+        enterKeyPressed: '&',
         inputName: '@'
       },
       templateUrl: function(element, attrs) {
@@ -177,7 +178,7 @@
 
         function callOrAssign(value) {
           if (typeof scope.selectedObject === 'function') {
-            scope.selectedObject(value);
+            scope.selectedObject(value, scope.currentIndex);
           }
           else {
             scope.selectedObject = value;
@@ -359,74 +360,8 @@
           var row = null;
           var rowTop = null;
 
-          if (which === KEY_EN && scope.results) {
-            if (scope.currentIndex >= 0 && scope.currentIndex < scope.results.length) {
-              event.preventDefault();
-              scope.selectResult(scope.results[scope.currentIndex]);
-            } else {
-              handleOverrideSuggestions(event);
-              clearResults();
-            }
-            scope.$apply();
-          } else if (which === KEY_DW && scope.results) {
-            event.preventDefault();
-            if ((scope.currentIndex + 1) < scope.results.length && scope.showDropdown) {
-              scope.$apply(function() {
-                scope.currentIndex ++;
-                updateInputField();
-              });
-
-              if (isScrollOn) {
-                row = dropdownRow();
-                if (dropdownHeight() < row.getBoundingClientRect().bottom) {
-                  dropdownScrollTopTo(dropdownRowOffsetHeight(row));
-                }
-              }
-            }
-          } else if (which === KEY_UP && scope.results) {
-            event.preventDefault();
-            if (scope.currentIndex >= 1) {
-              scope.$apply(function() {
-                scope.currentIndex --;
-                updateInputField();
-              });
-
-              if (isScrollOn) {
-                rowTop = dropdownRowTop();
-                if (rowTop < 0) {
-                  dropdownScrollTopTo(rowTop - 1);
-                }
-              }
-            }
-            else if (scope.currentIndex === 0) {
-              scope.$apply(function() {
-                scope.currentIndex = -1;
-                inputField.val(scope.searchStr);
-              });
-            }
-          } else if (which === KEY_TAB) {
-            if (scope.results && scope.results.length > 0 && scope.showDropdown) {
-              if (scope.currentIndex === -1 && scope.overrideSuggestions) {
-                // intentionally not sending event so that it does not
-                // prevent default tab behavior
-                handleOverrideSuggestions();
-              }
-              else {
-                if (scope.currentIndex === -1) {
-                  scope.currentIndex = 0;
-                }
-                scope.selectResult(scope.results[scope.currentIndex]);
-                scope.$digest();
-              }
-            }
-            else {
-              // no results
-              // intentionally not sending event so that it does not
-              // prevent default tab behavior
-              if (scope.searchStr && scope.searchStr.length > 0) {
-                handleOverrideSuggestions();
-              }
-            }
+          if (which == KEY_EN && scope.results) {
+              scope.enterKeyPressed();
           }
         }
 

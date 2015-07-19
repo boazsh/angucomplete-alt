@@ -361,6 +361,7 @@
           var rowTop = null;
 
           if (which == KEY_EN && scope.results) {
+              clearResults();
               scope.enterKeyPressed();
           }
         }

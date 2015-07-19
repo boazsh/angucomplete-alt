@@ -1,11 +1,11 @@
 /*
  * angucomplete-alt
  * Autocomplete directive for AngularJS
- * This is a fork of Daryl Rowland's angucomplete with some extra features.
- * By Hidenari Nozaki
+ * This is a fork of Hidenari Nozaki angucomplete-alt.
+ * By Matific.com
  */
 
-/*! Copyright (c) 2014 Hidenari Nozaki and contributors | Licensed under the MIT license */
+/*! Copyright (c) 2015 SlateScience and contributors | Licensed under the MIT license */
 
 'use strict';
 

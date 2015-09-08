@@ -60,6 +60,8 @@
         '      </div>' +
         '      <div class="angucomplete-title" ng-if="matchClass" ng-bind-html="result.title"></div>' +
         '      <div class="angucomplete-title" ng-if="!matchClass">{{ result.title }}</div>' +
+        '      <div ng-if="matchClass && result.subtitle && result.subtitle != \'\'" class="angucomplete-subtitle" ng-bind-html="result.subtitle"></div>' +
+        '      <div ng-if="!matchClass && result.subtitle && result.subtitle != \'\'" class="angucomplete-subtitle">{{result.subtitle}}</div>' +
         '      <div ng-if="matchClass && result.description && result.description != \'\'" class="angucomplete-description" ng-bind-html="result.description"></div>' +
         '      <div ng-if="!matchClass && result.description && result.description != \'\'" class="angucomplete-description">{{result.description}}</div>' +
         '    </div>' +
@@ -86,6 +88,7 @@
         remoteUrl: '@',
         remoteUrlDataField: '@',
         titleField: '@',
+        subtitleField: '@',
         descriptionField: '@',
         imageField: '@',
         inputClass: '@',
@@ -500,7 +503,7 @@
         }
 
         function processResults(responseData, str) {
-          var i, description, image, text, formattedText, formattedDesc;
+          var i, subtitle, description, image, text, formattedText, formattedSub, formattedDesc;
 
           if (responseData && responseData.length > 0) {
             scope.results = [];
@@ -510,7 +513,12 @@
                 text = formattedText = extractTitle(responseData[i]);
               }
 
+              subtitle = '';
               description = '';
+              if (scope.subtitleField) {
+                subtitle = formattedSub = extractValue(responseData[i], scope.subtitleField);
+              }
+
               if (scope.descriptionField) {
                 description = formattedDesc = extractValue(responseData[i], scope.descriptionField);
               }
@@ -522,11 +530,13 @@
 
               if (scope.matchClass) {
                 formattedText = findMatchString(text, str);
+                formattedSub = findMatchString(subtitle, str);
                 formattedDesc = findMatchString(description, str);
               }
 
               scope.results[scope.results.length] = {
                 title: formattedText,
+                subtitle: formattedSub,
                 description: formattedDesc,
                 image: image,
                 originalObject: responseData[i]
@@ -534,7 +544,7 @@
 
               if (scope.autoMatch) {
                 checkExactMatch(scope.results[scope.results.length-1],
-                    {title: text, desc: description || ''}, scope.searchStr);
+                    {title: text, sub: subtitle || '', des: description || ''}, scope.searchStr);
               }
             }
 
@@ -608,6 +618,7 @@
           // Restore original values
           if (scope.matchClass) {
             result.title = extractTitle(result.originalObject);
+            result.subtitle = extractValue(result.originalObject, scope.subtitleField);
             result.description = extractValue(result.originalObject, scope.descriptionField);
           }
 

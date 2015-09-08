@@ -6,3 +6,4 @@ This is a fork of angucomplete-alt (https://github.com/ghiden/angucomplete-alt) 
 * Added enter-key-pressed argument which is a callback for enter key down event.
 * Removed any other key-down behavior (prevents list keyboard navigation).
 * Send list item index to selectedObject callback.
+* Change description field to "subtitle" field and add a description field (for long description).
